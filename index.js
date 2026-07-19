@@ -81,25 +81,40 @@ function startCountdownTimer() {
     }, 1000);
 }
 
-// Balloon Mini Game Logic
+// --- NEW & IMPROVED BALLOON POP GAME ENGINE ---
 function setupBalloonGame() {
     poppedBalloons = 0;
     document.getElementById('pop-count').textContent = "3";
     const area = document.getElementById('balloon-area');
     area.innerHTML = "";
     
-    const colors = ['#f472b6', '#c084fc', '#fbcfe8', '#a78bfa'];
+    // A palette of vibrant, celebratory pastel colors
+    const colors = ['#ff7675', '#74b9ff', '#a29bfe', '#fdcb6e', '#e84393'];
+    
     for (let i = 0; i < 3; i++) {
         const balloon = document.createElement('div');
         balloon.className = 'game-balloon';
-        balloon.style.left = (20 + i * 90) + 'px';
+        balloon.style.left = (35 + i * 95) + 'px';
         balloon.style.backgroundColor = colors[i % colors.length];
-        balloon.style.animationDelay = (i * 0.5) + 's';
         
-        balloon.onclick = function() {
+        // Randomize floating speeds slightly so they don't move in uniform lockstep
+        balloon.style.animationDuration = (4.0 + Math.random() * 1.5) + 's';
+        balloon.style.animationDelay = (i * 0.4) + 's';
+        
+        balloon.onclick = function(e) {
+            // Grab coordinates where the finger or cursor actually clicked the balloon
+            const rect = area.getBoundingClientRect();
+            const popX = e.clientX - rect.left;
+            const popY = e.clientY - rect.top;
+            
+            // Trigger the explosion effect!
+            triggerSparkleBurst(popX, popY, balloon.style.backgroundColor, area);
+            
+            // Vanish balloon and track progress
             balloon.style.display = 'none';
             poppedBalloons++;
             document.getElementById('pop-count').textContent = String(3 - poppedBalloons);
+            
             if (poppedBalloons >= 3) {
                 const btn = document.getElementById('balloon-next-btn');
                 btn.classList.remove('disabled');
@@ -107,6 +122,51 @@ function setupBalloonGame() {
             }
         };
         area.appendChild(balloon);
+    }
+}
+
+// --- HELPER FUNCTION: POP CONFETTI PHYSICS ENGINE ---
+function triggerSparkleBurst(x, y, color, parentElement) {
+    const particleCount = 12; // Number of sparks thrown per pop
+    
+    for (let i = 0; i < particleCount; i++) {
+        const particle = document.createElement('div');
+        particle.className = 'confetti-sparkle';
+        
+        // Match the color of the balloon that was popped!
+        particle.style.backgroundColor = color;
+        
+        // Center the spawn point directly on the click position
+        particle.style.left = x + 'px';
+        particle.style.top = y + 'px';
+        
+        // Symmetrically distribute angles in a ring, adding random variance
+        const angle = (i * (360 / particleCount)) + (Math.random() * 20);
+        const force = Math.floor(Math.random() * 50) + 40; // Explosive push distance
+        
+        const destinationX = Math.cos(angle * Math.PI / 180) * force;
+        // The +20 pulls it down over time, simulating gravity on the dust confetti particles
+        const destinationY = Math.sin(angle * Math.PI / 180) * force + 20; 
+
+        // Generate a completely unique hardware keyframe animation name
+        const animName = `pop-sparkle-${Math.random().toString(36).substr(2, 9)}`;
+        const styleSheet = document.styleSheets[0];
+        
+        styleSheet.insertRule(`
+            @keyframes ${animName} {
+                0% { transform: translate3d(0, 0, 0) scale(1.5); opacity: 1; }
+                100% { transform: translate3d(${destinationX}px, ${destinationY}px, 0) scale(0.2); opacity: 0; }
+            }
+        `, styleSheet.cssRules.length);
+
+        particle.style.animation = `${animName} 0.6s cubic-bezier(0.1, 0.8, 0.3, 1) forwards`;
+        
+        parentElement.appendChild(particle);
+        
+        // Clean up the DOM element completely after the flash ends
+        particle.addEventListener('animationend', () => {
+            particle.remove();
+        });
     }
 }
 
