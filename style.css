@@ -1,0 +1,77 @@
+:root {
+    --purple-light: #f3ebff;
+    --purple-main: #d2b7fa;
+    --purple-dark: #9062f4;
+    --dark-pink: #d946ef;
+}
+
+* { margin: 0; padding: 0; box-sizing: border-box; font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif; }
+body { background-color: #f5f3ff; display: flex; justify-content: center; align-items: center; min-height: 100vh; overflow: hidden; }
+
+.phone-container {
+    background: var(--purple-light);
+    width: 100%; max-width: 390px; height: 100vh; max-height: 844px;
+    position: relative; overflow: hidden;
+    box-shadow: 0 20px 50px rgba(144, 98, 244, 0.15);
+    border-radius: 24px; border: 8px solid #fff;
+}
+
+@media (max-width: 400px) { .phone-container { border-radius: 0; border: none; max-height: 100vh; } }
+
+/* Screen Framework Configuration */
+.screen { position: absolute; width: 100%; height: 100%; top: 0; left: 0; display: none !important; flex-direction: column; justify-content: center; align-items: center; padding: 30px 20px; text-align: center; }
+.screen.active { display: flex !important; }
+
+/* Image handling fix rules */
+.screen img.screen-img { display: none !important; max-width: 85%; max-height: 220px; border-radius: 16px; box-shadow: 0 8px 20px rgba(0,0,0,0.1); margin: 15px auto; }
+.screen.active img.screen-img { display: block !important; }
+
+.fallback-box { width: 120px; height: 120px; background: white; border-radius: 50%; display: flex; justify-content: center; align-items: center; font-size: 55px; box-shadow: 0 8px 20px rgba(144, 98, 244, 0.12); margin: 20px auto; }
+.screen.active .fallback-box { animation: gentleFloat 2.5s infinite ease-in-out; }
+
+@keyframes gentleFloat { 0%, 100% { transform: translateY(0); } 50% { transform: translateY(-8px); } }
+
+/* Lockscreen details */
+.lock-header { margin-bottom: 30px; }
+.lock-icon { font-size: 40px; margin-bottom: 10px; }
+.passcode-dots { display: flex; gap: 15px; margin-bottom: 40px; }
+.dot { width: 14px; height: 14px; border: 2px solid var(--purple-dark); border-radius: 50%; transition: background 0.2s; }
+.dot.filled { background: var(--purple-dark); }
+.keypad { display: grid; grid-template-columns: repeat(3, 1fr); gap: 15px; width: 100%; max-width: 280px; }
+.key { background: white; border: none; width: 65px; height: 65px; border-radius: 50%; font-size: 24px; font-weight: 600; color: #333; cursor: pointer; display: flex; justify-content: center; align-items: center; box-shadow: 0 4px 10px rgba(0,0,0,0.05); transition: background 0.1s, transform 0.1s; margin: 0 auto; }
+.key:active { background: var(--purple-main); transform: scale(0.95); }
+.key.clear, .key.delete { font-size: 18px; color: #777; background: #f1f1f1; }
+
+/* Balloon Area Styles */
+.balloon-game-area { width: 100%; height: 260px; position: relative; overflow: hidden; background: rgba(255,255,255,0.4); border-radius: 16px; border: 1px dashed var(--purple-main); margin-bottom: 20px; }
+.game-balloon { position: absolute; width: 55px; height: 70px; border-radius: 50% 50% 50% 50% / 40% 40% 60% 60%; cursor: pointer; animation: floatUp 4s infinite linear; }
+.game-balloon::after { content: ""; position: absolute; bottom: -8px; left: 24px; border-left: 4px solid transparent; border-right: 4px solid transparent; }
+@keyframes floatUp { 0% { transform: translateY(280px); } 100% { transform: translateY(-90px); } }
+
+/* Cake / Candle Styles */
+.cake-container { width: 160px; height: 180px; position: relative; margin: 20px auto; cursor: pointer; }
+.cake-base { width: 160px; height: 90px; background: #fbcfe8; border-radius: 20px; position: absolute; bottom: 0; box-shadow: 0 6px 0 #f472b6, inset 0 12px 0 #fff; }
+.candle { width: 14px; height: 50px; background: #c084fc; position: absolute; bottom: 90px; left: 73px; border-radius: 4px; }
+.flame { width: 16px; height: 24px; background: #fb923c; position: absolute; top: -28px; left: -1px; border-radius: 50% 50% 20% 20% / 60% 60% 40% 40%; animation: flicker 0.15s infinite alternate; box-shadow: 0 0 15px #f97316; }
+@keyframes flicker { 0% { transform: scale(1); } 100% { transform: scale(1.1) rotate(2deg); } }
+
+/* Letter boxes & Timers */
+.countdown-container { display: flex; gap: 12px; margin: 30px 0; }
+.time-box { background: white; padding: 12px; border-radius: 12px; min-width: 68px; box-shadow: 0 6px 15px rgba(0,0,0,0.05); }
+.time-box span { font-size: 24px; font-weight: 700; color: var(--purple-dark); }
+.time-box p { font-size: 10px; color: #888; text-transform: uppercase; margin-top: 2px; }
+.birthday-title { font-size: 28px; color: var(--purple-dark); font-weight: 800; }
+.letter-box { background: white; padding: 20px; border-radius: 16px; width: 100%; max-width: 320px; max-height: 260px; overflow-y: auto; box-shadow: 0 10px 25px rgba(0,0,0,0.05); text-align: left; border: 1px dashed var(--purple-main); }
+
+.btn { background: var(--purple-dark); color: white; border: none; padding: 14px 28px; font-size: 15px; font-weight: 700; border-radius: 30px; cursor: pointer; box-shadow: 0 6px 20px rgba(144, 98, 244, 0.3); transition: transform 0.2s, background 0.2s; }
+.btn.disabled { background: #ccc; box-shadow: none; cursor: not-allowed; }
+
+.phone-notification { position: absolute; top: -100px; left: 5%; width: 90%; background: white; border-left: 5px solid var(--dark-pink); padding: 12px 15px; border-radius: 12px; box-shadow: 0 8px 25px rgba(0,0,0,0.15); display: flex; align-items: center; gap: 12px; z-index: 1000; transition: transform 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.275); }
+.phone-notification.show { transform: translateY(120px); }
+.notification-icon { font-size: 24px; }
+.notification-content h5 { color: var(--dark-pink); font-size: 14px; margin-bottom: 2px; }
+.notification-content p { font-size: 12px; color: #666; }
+
+.clear-heart { position: absolute; background: rgba(210, 183, 250, 0.4); clip-path: path('M12,21.35L10.55,20.03C5.4,15.36 2,12.27 2,8.5C2,5.41 4.42,3 7.5,3C9.24,3 10.91,3.81 12,5.08C13.09,3.81 14.76,3 16.5,3C19.58,3 22,5.41 22,8.5C22,12.27 18.6,15.36 13.45,20.03L12,21.35Z'); animation: fall linear infinite; pointer-events: none; z-index: 1; }
+@keyframes fall { 0% { transform: translateY(-50px) rotate(0deg) scale(0.8); opacity: 0; } 10% { opacity: 0.6; } 100% { transform: translateY(900px) rotate(360deg) scale(1.2); opacity: 0; } }
+.burst-heart { position: absolute; pointer-events: none; z-index: 9999; will-change: transform, opacity; }
